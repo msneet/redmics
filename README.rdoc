@@ -15,6 +15,6 @@ This plug-in requires icalendar 1.1.6 (http://icalendar.rubyforge.org/).
 == Installation
 
 * <tt>cd /opt/redmine/plugins</tt>
-* <tt>git clone https://github.com/buschmais/redmics.git</tt>
+* <tt>git clone https://github.com/buschmais/redmics.git redmine_ics_export</tt>
 * <tt>cd /opt/redmine</tt>
 * <tt>bundle install --without development test</tt>
