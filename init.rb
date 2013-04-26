@@ -28,7 +28,7 @@ Redmine::Plugin.register :redmine_ics_export do
   author 'Frank Schwarz'
   description 'ICalendar view of issue- and version-deadlines'
   version '2.0.0.dev'
-  url 'http://code.google.com/p/redmics/'
+  url 'https://github.com/buschmais/redmics'
   author_url 'http://www.buschmais.de/author/frank/'
   settings(
     :default => {
