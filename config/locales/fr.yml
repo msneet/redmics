@@ -5,19 +5,19 @@ fr:
   label_issues_assigned: Demandes assignés
   label_issues_all: Toutes les demandes
   label_issues_open_only: Ouvert
-  toolip_icalendar_link: Copy the link location for use in your favorite ical-application.
-  label_settings_rendering_header: Render options
-  label_settings_rendering_issues: Issue rendering as
-  label_settings_rendering_versions: Version rendering as
-  option_settings_rendering_none: skip rendering
-  option_settings_rendering_vevent_full_span: full time event
-  option_settings_rendering_vevent_end_date: all-day event for just the end date
-  option_settings_rendering_vevent_start_and_end_date: all-day event for start and end date
-  option_settings_rendering_vtodo: todo item
-  text_settings_rendering_more_information: For more information see
-  label_redmics_settings_userprefs: ICS export
-  notice_redmics_userprefs_updated: ICS export settings have been updated sucessfully
-  notice_redmics_userprefs_reset: ICS export settings have been reset
+  toolip_icalendar_link: Copiez l'adresse du lien pour utiliser dans votre application ical favorite
+  label_settings_rendering_header: Options d'affichage
+  label_settings_rendering_issues: Affichage d'une Demande en tant que
+  label_settings_rendering_versions: Affichage d'une Version en tant que
+  option_settings_rendering_none: Ne pas afficher
+  option_settings_rendering_vevent_full_span: Evènement sur toute la période
+  option_settings_rendering_vevent_end_date: Evènement sur la journée uniquement pour la date de fin
+  option_settings_rendering_vevent_start_and_end_date: Evènement sur la journée pour les dates de début et de fin
+  option_settings_rendering_vtodo: Afficher en tant que Tâche
+  text_settings_rendering_more_information: Pour plus d'information, voir
+  label_redmics_settings_userprefs: Export ICS
+  notice_redmics_userprefs_updated: Configuration d'export ICS mis à jour avec succès
+  notice_redmics_userprefs_reset: Configuration d'export ICS réinitialisée
   label_settings_enhance_summary: Ajouter à la description
   option_settings_enhance_summary_plain: garder la comme elle est
   option_settings_enhance_summary_status: le statut
