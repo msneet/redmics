@@ -16,8 +16,10 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 RedmineApp::Application.routes.draw do
+  match 'icalendar/all_projects/query/:query_id/issues.:format', :to => 'i_calendar#index', :via => 'get'
   match 'icalendar/all_projects/:assignment/issues.:format', :to => 'i_calendar#index', :via => 'get'
   match 'icalendar/all_projects/:assignment/:status/issues.:format', :to => 'i_calendar#index', :via => 'get'
+  match 'icalendar/:project_id/query/:query_id/issues.:format', :to => 'i_calendar#index', :via => 'get'
   match 'icalendar/:project_id/:assignment/issues.:format', :to => 'i_calendar#index', :via => 'get'
   match 'icalendar/:project_id/:assignment/:status/issues.:format', :to => 'i_calendar#index', :via => 'get'
   match 'my/redmics_settings', :to => 'my#redmics_settings', :via => [:get, :post]

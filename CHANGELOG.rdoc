@@ -1,5 +1,8 @@
 = redmine_ics_export (redmics) change-log
 
+== 3.0.0 (dev)
+ * Support for custom queries (issue #11)
+
 == 2.0.0 (dev)
  * compatibility with Redmine 2.0.0 (issue #28)
 

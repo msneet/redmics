@@ -28,6 +28,7 @@ module Redmics
     def settings(args)
       @user = args[:user]
       @project = args[:project]
+      @query = args[:query]
       @status = args[:status]
       @assignment = args[:assignment]
       @issue_strategy = args[:issue_strategy]
@@ -40,7 +41,11 @@ module Redmics
       issues_rederer = create_issues_rederer @issue_strategy
       versions_rederer = create_versions_rederer @version_strategy
       
-      (issues, versions) = query_events
+      if @query
+        (issues, versions) = redmine_query
+      else
+        (issues, versions) = redmics_query
+      end
     
       events = []
       events += issues.collect(&issues_rederer).flatten
@@ -54,35 +59,32 @@ module Redmics
     
   private
   
-    def query_events
+    def redmine_query
       begin
-        # project(s)
-        if @user.anonymous?
-          if @project
-            # the project and its public descendants
-            ids = [@project.id] + @project.descendants.find_all { |p|  
-              p.is_public? && p.active? 
-            }.collect(&:id)
-            project_condition = ["#{Project.table_name}.id IN (?)", ids]
-          else
-            # all public projects
-            project_condition = [Project.visible_condition(@user)]
-          end
-        elsif @user.active?
-          if @project
-            # the project and its public descendants or where the user is member of
-            userproject_ids = @user.memberships.collect(&:project_id).uniq
-            ids = [@project.id] + @project.descendants.find_all { |p|  
-              p.active? && (p.is_public? || userproject_ids.include?(p.id))
-            }.collect(&:id)
-            project_condition = ["#{Project.table_name}.id IN (?)", ids]
-          else
-            # all user-visible and public projects
-            project_condition = [Project.visible_condition(@user)]
-          end
-        else
-          raise 'User not active.'
-        end
+        # query: issues
+        c = QueryConditions.new()
+        c << get_project_condition
+        c << @query.statement
+        issues = []
+        issues = Issue.find(
+          :all, 
+          :include => [:tracker, :assigned_to, :priority, :project, :status, :fixed_version, :author], 
+          :conditions => c.conditions
+        ) unless @issue_strategy == :none
+        # query: versions -> skip
+        versions = []
+      rescue Exception => e
+        # we will just deliver an empty ical file instead of showing an error page
+        @controller.logger.warn('No issues have been selected. ' + e.to_s)
+        issues = []
+        versions = []
+      end
+      return [issues, versions]
+    end
+
+    def redmics_query
+      begin
+        project_condition = get_project_condition
 
         case @status
         when :open
@@ -143,6 +145,35 @@ module Redmics
         versions = []
       end
       return [issues, versions]
+    end
+    
+    def get_project_condition
+        if @user.anonymous?
+          if @project
+            # the project and its public descendants
+            ids = [@project.id] + @project.descendants.find_all { |p|  
+              p.is_public? && p.active? 
+            }.collect(&:id)
+            return ["#{Project.table_name}.id IN (?)", ids]
+          else
+            # all public projects
+            return [Project.visible_condition(@user)]
+          end
+        elsif @user.active?
+          if @project
+            # the project and its public descendants or where the user is member of
+            userproject_ids = @user.memberships.collect(&:project_id).uniq
+            ids = [@project.id] + @project.descendants.find_all { |p|  
+              p.active? && (p.is_public? || userproject_ids.include?(p.id))
+            }.collect(&:id)
+            return ["#{Project.table_name}.id IN (?)", ids]
+          else
+            # all user-visible and public projects
+            return [Project.visible_condition(@user)]
+          end
+        else
+          raise 'User not active.'
+        end
     end
     
     def create_issues_rederer(type)
@@ -307,8 +338,7 @@ module Redmics
         event.add_category  @controller.l(:label_issue).upcase
         event.add_contact   issue.assigned_to.name, {"ALTREP" => issue.assigned_to.mail} unless issue.assigned_to.nil?
         event.organizer     "mailto:#{issue.author.mail}", {"CN" => issue.author.name}
-        event.url           @controller.url_for(:controller => 'issues', :action => 'show', 
-                                                :id => issue.id, :project_id => issue.project_id)
+        event.url           @controller.url_for(:controller => 'issues', :action => 'show', :id => issue.id)
         event.sequence      issue.lock_version
       }
     end
@@ -406,8 +436,7 @@ module Redmics
         event.last_modified version.updated_on.to_datetime unless version.updated_on.nil?
         event.description   version.description unless version.description.nil?
         event.add_category  @controller.l(:label_version).upcase
-        event.url           @controller.url_for(:controller => 'versions', :action => 'show', 
-                                                :id => version.id)
+        event.url           @controller.url_for(:controller => 'versions', :action => 'show', :id => version.id)
         days = (version.updated_on.to_i - version.created_on.to_i) / 86400
         event.sequence      days
       }
