@@ -61,31 +61,24 @@ module Redmics
   
     def redmine_query
       begin
-        # query: issues
-        c = QueryConditions.new()
-        c << get_project_condition
-        c << @query.statement
         issues = []
-        issues = Issue.find(
-          :all, 
-          :include => [:tracker, :assigned_to, :priority, :project, :status, :fixed_version, :author], 
-          :conditions => c.conditions
-        ) unless @issue_strategy == :none
-        # query: versions -> skip
         versions = []
+        if @query.valid?
+          # query: issues
+          issues = @query.issues(
+            :include => [:tracker, :assigned_to, :priority, :fixed_version, :author], 
+          ) unless @issue_strategy == :none
+          # query: versions -> skip
+        end
       rescue Exception => e
         # we will just deliver an empty ical file instead of showing an error page
         @controller.logger.warn('No issues have been selected. ' + e.to_s)
-        issues = []
-        versions = []
       end
       return [issues, versions]
     end
 
     def redmics_query
       begin
-        project_condition = get_project_condition
-
         case @status
         when :open
           issue_status_condition = ["#{IssueStatus.table_name}.is_closed = ?", false]
@@ -109,32 +102,27 @@ module Redmics
           raise "Unknown assignment: '#{@assignment}.'"
         end
 
+        @query = IssueQuery.new(:name => "_")
+        @query.project = @project
+        issues = []
+        versions = []
+
         # query: issues
         c = QueryConditions.new()
-        c << project_condition
-        c << issue_status_condition   unless issue_status_condition.empty?
-        c << assigned_to_condition    unless assigned_to_condition.empty?
-        issues = []
-        issues = Issue.find(
-          :all, 
-          :include => [:tracker, :assigned_to, :priority, :project, :status, :fixed_version, :author], 
-          :conditions => c.conditions
-        ) unless @issue_strategy == :none
+        c << issue_status_condition unless issue_status_condition.empty?
+        c << assigned_to_condition unless assigned_to_condition.empty?
+        issues = @query.issues(
+          :include => [:tracker, :assigned_to, :priority, :fixed_version, :author], 
+          :conditions => c.conditions) unless @issue_strategy == :none
         # query: versions
         c = QueryConditions.new()
-        c << project_condition
         c << version_status_condition unless version_status_condition.empty?
-        versions = []
-        versions = Version.find(
-          :all,
-          :include => [:project], 
+        versions =  @query.versions(
           :conditions => c.conditions
         ) unless @version_strategy == :none
         c = QueryConditions.new()
         c << ["#{Version.table_name}.sharing = ?", 'system']
-        versions << Version.find(
-          :all,
-          :include => [:project],
+        versions << @query.versions(
           :conditions => c.conditions
         ) unless @version_strategy == :none
         versions.flatten!
@@ -145,35 +133,6 @@ module Redmics
         versions = []
       end
       return [issues, versions]
-    end
-    
-    def get_project_condition
-        if @user.anonymous?
-          if @project
-            # the project and its public descendants
-            ids = [@project.id] + @project.descendants.find_all { |p|  
-              p.is_public? && p.active? 
-            }.collect(&:id)
-            return ["#{Project.table_name}.id IN (?)", ids]
-          else
-            # all public projects
-            return [Project.visible_condition(@user)]
-          end
-        elsif @user.active?
-          if @project
-            # the project and its public descendants or where the user is member of
-            userproject_ids = @user.memberships.collect(&:project_id).uniq
-            ids = [@project.id] + @project.descendants.find_all { |p|  
-              p.active? && (p.is_public? || userproject_ids.include?(p.id))
-            }.collect(&:id)
-            return ["#{Project.table_name}.id IN (?)", ids]
-          else
-            # all user-visible and public projects
-            return [Project.visible_condition(@user)]
-          end
-        else
-          raise 'User not active.'
-        end
     end
     
     def create_issues_rederer(type)
