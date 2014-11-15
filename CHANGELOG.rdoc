@@ -2,6 +2,7 @@
 
 == 3.0.1 (dev)
  * make queries compatible again to current head of Redmine
+ * experimental support for alarms
 
 == 3.0.0 (dev)
  * Support for custom queries (issue #11)

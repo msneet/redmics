@@ -34,6 +34,7 @@ class ICalendarController < ApplicationController
     e.settings(:user => @user,
                :project => @project,
                :query => @query,
+               :alarm => params[:alarm],
                :status => params[:status] ? params[:status].to_sym : nil,
                :assignment => params[:assignment] ? params[:assignment].to_sym : nil,
                :issue_strategy => @settings[:redmics_icsrender_issues].to_sym,

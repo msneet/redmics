@@ -30,6 +30,7 @@ module Redmics
       @project = args[:project]
       @query = args[:query]
       @status = args[:status]
+      @alarm = args[:alarm]
       @assignment = args[:assignment]
       @issue_strategy = args[:issue_strategy]
       @version_strategy = args[:version_strategy]
@@ -146,6 +147,7 @@ module Redmics
           result = create_issue_vevent_full_span(issue)
           apply_issue_common_properties(issue, result)
           apply_issue_event_properties(issue, result)
+          apply_issue_alarm(issue, result) unless @alarm.nil?
           enhance_issue_summary(issue, result)
           enhance_issue_description(issue, result)
           result
@@ -155,6 +157,7 @@ module Redmics
           result = create_issue_vevent_end_date(issue)
           apply_issue_common_properties(issue, result)
           apply_issue_event_properties(issue, result)
+          apply_issue_alarm(issue, result) unless @alarm.nil?
           enhance_issue_summary(issue, result)
           enhance_issue_description(issue, result)
           result
@@ -164,6 +167,7 @@ module Redmics
           result = create_issue_vevent_start_and_end_date(issue)
           apply_issue_common_properties(issue, result)
           apply_issue_event_properties(issue, result)
+          apply_issue_alarm(issue, result) unless @alarm.nil?
           enhance_issue_summary(issue, result)
           enhance_issue_description(issue, result)
           result
@@ -173,6 +177,7 @@ module Redmics
           result = create_issue_vtodo(issue)
           apply_issue_common_properties(issue, result)
           apply_issue_todo_properties(issue, result)
+          apply_issue_alarm(issue, result) unless @alarm.nil?
           enhance_issue_summary(issue, result)
           enhance_issue_description(issue, result)
           result
@@ -300,6 +305,16 @@ module Redmics
         event.url           @controller.url_for(:controller => 'issues', :action => 'show', :id => issue.id)
         event.sequence      issue.lock_version
       }
+    end
+
+    def apply_issue_alarm(issue, result)
+      if !result.empty?
+        alarm_trigger = @alarm # strange but seems to be required
+        result.last.alarm { |alarm|
+          alarm.description "This is an event reminder"
+          alarm.trigger     alarm_trigger
+        }
+      end
     end
 
     def apply_issue_event_properties(issue, result)
