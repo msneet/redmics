@@ -121,7 +121,6 @@ module Redmics
         versions =  @query.versions(
           :conditions => c.conditions
         ) unless @version_strategy == :none
-        c = QueryConditions.new()
         c << ["#{Version.table_name}.sharing = ?", 'system']
         versions << @query.versions(
           :conditions => c.conditions
