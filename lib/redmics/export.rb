@@ -5,12 +5,12 @@
 # modify it under the terms of the GNU General Public License
 # as published by the Free Software Foundation; either version 2
 # of the License, or (at your option) any later version.
-# 
+#
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
@@ -19,12 +19,12 @@ module Redmics
   class Export
     include Redmics
     include Redmine::I18n
-    
+
     def initialize(controller)
       @controller = controller
       @priority_count = IssuePriority.all.length
     end
-    
+
     def settings(args)
       @user = args[:user]
       @project = args[:project]
@@ -37,17 +37,17 @@ module Redmics
       @summary_strategy = args[:summary_strategy]
       @description_strategy = args[:description_strategy]
     end
-    
+
     def icalendar
       issues_rederer = create_issues_rederer @issue_strategy
       versions_rederer = create_versions_rederer @version_strategy
-      
+
       if @query
         (issues, versions) = redmine_query
       else
         (issues, versions) = redmics_query
       end
-    
+
       events = []
       events += issues.collect(&issues_rederer).flatten
       events += versions.collect(&versions_rederer).flatten
@@ -57,9 +57,9 @@ module Redmics
       events.each { |event| cal.add_event(event) }
       return cal
     end
-    
+
   private
-  
+
     def redmine_query
       begin
         issues = []
@@ -67,7 +67,7 @@ module Redmics
         if @query.valid?
           # query: issues
           issues = @query.issues(
-            :include => [:tracker, :assigned_to, :priority, :fixed_version, :author], 
+            :include => [:tracker, :assigned_to, :priority, :fixed_version, :author],
           ) unless @issue_strategy == :none
           # query: versions -> skip
         end
@@ -113,7 +113,7 @@ module Redmics
         c << issue_status_condition unless issue_status_condition.empty?
         c << assigned_to_condition unless assigned_to_condition.empty?
         issues = @query.issues(
-          :include => [:tracker, :assigned_to, :priority, :fixed_version, :author], 
+          :include => [:tracker, :assigned_to, :priority, :fixed_version, :author],
           :conditions => c.conditions) unless @issue_strategy == :none
         # query: versions
         c = QueryConditions.new()
@@ -134,15 +134,15 @@ module Redmics
       end
       return [issues, versions]
     end
-    
+
     def create_issues_rederer(type)
       case type
       when :none
-        lambda { |issue| 
+        lambda { |issue|
           []
         }
       when :vevent_full_span
-        lambda { |issue| 
+        lambda { |issue|
           result = create_issue_vevent_full_span(issue)
           apply_issue_common_properties(issue, result)
           apply_issue_event_properties(issue, result)
@@ -152,7 +152,7 @@ module Redmics
           result
         }
       when :vevent_end_date
-        lambda { |issue| 
+        lambda { |issue|
           result = create_issue_vevent_end_date(issue)
           apply_issue_common_properties(issue, result)
           apply_issue_event_properties(issue, result)
@@ -162,7 +162,7 @@ module Redmics
           result
         }
       when :vevent_start_and_end_date
-        lambda { |issue| 
+        lambda { |issue|
           result = create_issue_vevent_start_and_end_date(issue)
           apply_issue_common_properties(issue, result)
           apply_issue_event_properties(issue, result)
@@ -172,7 +172,7 @@ module Redmics
           result
         }
       when :vtodo
-        lambda { |issue| 
+        lambda { |issue|
           result = create_issue_vtodo(issue)
           apply_issue_common_properties(issue, result)
           apply_issue_todo_properties(issue, result)
@@ -187,11 +187,11 @@ module Redmics
     def create_versions_rederer(type)
       case type
       when :none
-        lambda { |version| 
+        lambda { |version|
           []
         }
       when :vevent_full_span
-        lambda { |version| 
+        lambda { |version|
           result = create_version_vevent_full_span(version)
           apply_version_common_properties(version, result)
           apply_version_event_properties(version, result)
@@ -199,7 +199,7 @@ module Redmics
           result
         }
       when :vevent_end_date
-        lambda { |version| 
+        lambda { |version|
           result = create_version_vevent_end_date(version)
           apply_version_common_properties(version, result)
           apply_version_event_properties(version, result)
@@ -207,7 +207,7 @@ module Redmics
           result
         }
       when :vevent_start_and_end_date
-        lambda { |version| 
+        lambda { |version|
           result = create_version_vevent_start_and_end_date(version)
           apply_version_common_properties(version, result)
           apply_version_event_properties(version, result)
@@ -215,7 +215,7 @@ module Redmics
           result
         }
       when :vtodo
-        lambda { |version| 
+        lambda { |version|
           result = create_version_vtodo(version)
           apply_version_common_properties(version, result)
           apply_version_todo_properties(version, result)
@@ -292,7 +292,7 @@ module Redmics
     end
 
     def apply_issue_common_properties(issue, result)
-      result.each { |event|  
+      result.each { |event|
         event.summary       "#{issue.subject}" unless event.summary
         event.priority      map_priority issue.priority.position
         event.created       issue.created_on.to_date, {'VALUE' => 'DATE'}
@@ -317,7 +317,7 @@ module Redmics
     end
 
     def apply_issue_event_properties(issue, result)
-      result.each { |event|  
+      result.each { |event|
         event.status        issue.assigned_to ? "CONFIRMED" : "TENTATIVE" unless issue.closed?
       }
     end
@@ -403,7 +403,7 @@ module Redmics
     end
 
     def apply_version_common_properties(version, result)
-      result.each { |event|  
+      result.each { |event|
         event.summary       "#{@controller.l(:label_version)} #{version.name}" unless event.summary
         event.created       version.created_on.to_date, {'VALUE' => 'DATE'}
         event.last_modified version.updated_on.to_datetime unless version.updated_on.nil?
@@ -416,7 +416,7 @@ module Redmics
     end
 
     def apply_version_event_properties(version, result)
-      result.each { |event|  
+      result.each { |event|
         event.status        "CONFIRMED" unless version.closed?
       }
     end
