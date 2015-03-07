@@ -429,7 +429,7 @@ module Redmics
           todo.percent      100
         else
           todo.status       "IN-PROCESS"
-          todo.percent      version.completed_pourcent.to_i
+          todo.percent      version.completed_percent.to_i
         end
       }
     end
