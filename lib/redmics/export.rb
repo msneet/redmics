@@ -105,6 +105,7 @@ module Redmics
 
         @query = IssueQuery.new(:name => "_")
         @query.project = @project
+        @query.filters = nil
         issues = []
         versions = []
 
