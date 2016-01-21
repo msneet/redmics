@@ -1,29 +1,30 @@
 # Turkish strings go here
 tr:
   label_icalendar_header: ICalendar
-  label_issues_mine: My issues
-  label_issues_assigned: Assigned issues
-  label_issues_all: All issues
-  label_issues_open_only: open only
-  toolip_icalendar_link: Copy the link location for use in your favorite ical-application.
-  label_settings_rendering_header: Render options
-  label_settings_rendering_issues: Issue rendering as
-  label_settings_rendering_versions: Version rendering as
-  option_settings_rendering_none: skip rendering
-  option_settings_rendering_vevent_full_span: full time event
-  option_settings_rendering_vevent_end_date: all-day event for just the end date
-  option_settings_rendering_vevent_start_and_end_date: all-day event for start and end date
-  option_settings_rendering_vtodo: todo item
-  text_settings_rendering_more_information: For more information see
-  label_redmics_settings_userprefs: ICS export
-  notice_redmics_userprefs_updated: ICS export settings have been updated sucessfully
-  notice_redmics_userprefs_reset: ICS export settings have been reset
-  label_settings_enhance_summary: Enhance summary with
-  option_settings_enhance_summary_plain: keep as is
-  option_settings_enhance_summary_status: status
-  option_settings_enhance_summary_ticket_number_and_status: ticket number and status
-  label_settings_enhance_description: Enhance description with
-  option_settings_enhance_description_plain: keep as is
-  option_settings_enhance_description_url_and_version: URL and version
-  option_settings_enhance_description_full_no_url: all available information without URL
-  option_settings_enhance_description_full: all available information
+  label_issues_mine: İşlerim
+  label_issues_assigned: Atanmış İşler
+  label_issues_all: Tüm işler
+  label_issues_open_only: sadece açık
+  toolip_icalendar_link: Bu linki kopyalayıp, seçtiğiniz ical takvim uygulaması ile kullanın
+  label_settings_rendering_header: Gösterme seçenekleri
+  label_settings_rendering_issues: İşleri gösterirken
+  label_settings_rendering_versions: Sürümleri gösterirken
+  option_settings_rendering_none: gösterme
+  option_settings_rendering_vevent_full_span: tüm zamanı göster
+  option_settings_rendering_vevent_end_date: bitiş günü için tam günlük etkinlik göster
+  option_settings_rendering_vevent_start_and_end_date: hem başlangıç hem bitiş için tam günlük etkinlik göster
+  option_settings_rendering_vtodo: görev olarak göster
+  text_settings_rendering_more_information: Daha bilgi için
+  label_redmics_settings_userprefs: ICS dışa aktarma
+  notice_redmics_userprefs_updated: ICS dışa aktarma ayarları güncellendi
+  notice_redmics_userprefs_reset: ICS dışa aktarma ayarları sıfırlandı
+  label_settings_enhance_summary: Özete şunları ekle
+  option_settings_enhance_summary_plain: aynen kalsın
+  option_settings_enhance_summary_status: durum
+  option_settings_enhance_summary_ticket_number_and_status: iş numarası ve durumu
+  label_settings_enhance_description: Açıklamaya şunları ekle
+  option_settings_enhance_description_plain: aynen kalsın
+  option_settings_enhance_description_url_and_version: Sayfa adresi ve sürümü
+  option_settings_enhance_description_full_no_url: Sayfa adresi hariçi tüm bilgiler
+  option_settings_enhance_description_full: Tüm bilgiler
+  
