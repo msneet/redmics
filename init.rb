@@ -32,10 +32,10 @@ Redmine::Plugin.register :redmine_ics_export do
   author_url 'http://www.buschmais.de/author/frank/'
   settings(
     :default => {
-      :redmics_icsrender_issues => :vevent_end_date,
-      :redmics_icsrender_versions => :vevent_end_date,
+      :redmics_icsrender_issues => :vevent_start_and_end_date,
+      :redmics_icsrender_versions => :none,
       :redmics_icsrender_summary => :status,
-      :redmics_icsrender_description => :full,
+      :redmics_icsrender_description => :plain,
     },
     :partial => 'settings/redmics_settings')
 end
