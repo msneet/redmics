@@ -2,9 +2,9 @@
 # contribution of Alexander Sapozhnikov <shoorick77@gmail.com>
 # and Dmitriy Trt <dmitriy.trt@gmail.com>
 ru:
-  label_icalendar_header: ICalendar
+  label_icalendar_header: ICS WebCal
   label_issues_mine: Мои задачи
-  label_issues_assigned: Назначенные задачи
+  label_issues_assigned: WebCal Назначенные мне
   label_issues_all: Все задачи
   label_issues_open_only: только открытые
   toolip_icalendar_link: Скопируйте адрес ссылки и используйте в вашем любимом ical-приложении.
