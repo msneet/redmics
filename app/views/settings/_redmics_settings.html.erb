@@ -35,8 +35,4 @@
   <%= content_tag :label, l(:label_settings_enhance_description) + ':' %>
   <%= select_tag 'settings[redmics_icsrender_description]', options_for_select(description_options, @settings[:redmics_icsrender_description].to_sym) %><br/>
 </p>
-<p>
-  <%= content_tag :span, l(:text_settings_rendering_more_information) + ':' %>
-  <%= content_tag :a, 'https://github.com/msneet/redmics/wiki/Settings',
-                  :href => 'https://github.com/msneet/redmics/wiki/Settings', :target => '_blank' %>
-</p>
+
