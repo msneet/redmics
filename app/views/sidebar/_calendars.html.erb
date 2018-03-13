@@ -7,5 +7,9 @@
   <% unless user.anonymous? %>
   <%= link_to l(:label_issues_assigned), { :controller => 'i_calendar', :assignment => :my, :status => 'open', :action => 'index', :project_id => project, :key => user.rss_key, :format => 'ics' }, :title => l(:toolip_icalendar_link) %> 
   <br/>
+  <% if @query && @query.id %>
+  <br/>
+  <%= link_to @query.name, { :controller => 'i_calendar', :query_id => @query.id, :action => 'index', :project_id => project, :key => user.rss_key, :format => 'ics' }, :title => l(:toolip_icalendar_link) %>
+  <% end  %>
   <% end %>
 <% end %>
